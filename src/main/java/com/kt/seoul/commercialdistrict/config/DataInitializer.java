@@ -2,14 +2,17 @@ package com.kt.seoul.commercialdistrict.config;
 
 import com.kt.seoul.commercialdistrict.entity.DistrictPopulationStatistics;
 import com.kt.seoul.commercialdistrict.entity.DistrictCode;
+import com.kt.seoul.commercialdistrict.entity.SalesData;
 import com.kt.seoul.commercialdistrict.repository.DistrictPopulationStatisticsRepository;
 import com.kt.seoul.commercialdistrict.repository.DistrictCodeRepository;
+import com.kt.seoul.commercialdistrict.repository.SalesDataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class DataInitializer implements CommandLineRunner {
     
     private final DistrictPopulationStatisticsRepository repository;
     private final DistrictCodeRepository districtCodeRepository;
+    private final SalesDataRepository salesDataRepository;
     
     @Override
     @Transactional
@@ -37,6 +41,9 @@ public class DataInitializer implements CommandLineRunner {
         
         // 인구 통계 데이터 초기화
         initializePopulationStatistics();
+        
+        // 매출 데이터 초기화
+        initializeSalesData();
         
         log.info("서울시 25개 자치구 데이터 초기화 완료");
     }
@@ -75,6 +82,24 @@ public class DataInitializer implements CommandLineRunner {
         repository.saveAll(districts);
         
         log.info("인구 통계 데이터 초기화 완료 (총 {}개 레코드)", districts.size());
+    }
+    
+    /**
+     * 매출 데이터 초기화
+     */
+    private void initializeSalesData() {
+        log.info("매출 데이터 초기화 시작");
+        
+        // 기존 데이터가 있으면 초기화하지 않음
+        if (salesDataRepository.count() > 0) {
+            log.info("기존 매출 데이터가 존재하여 초기화를 건너뜁니다. (총 {}개 레코드)", salesDataRepository.count());
+            return;
+        }
+        
+        List<SalesData> salesDataList = createSalesData();
+        salesDataRepository.saveAll(salesDataList);
+        
+        log.info("매출 데이터 초기화 완료 (총 {}개 레코드)", salesDataList.size());
     }
     
     /**
@@ -292,6 +317,137 @@ public class DataInitializer implements CommandLineRunner {
                 .age40To49Female(age40To49Female)
                 .age50To59Female(age50To59Female)
                 .age60PlusFemale(age60PlusFemale)
+                .build();
+    }
+
+    /**
+     * 매출 데이터 생성
+     */
+    private List<SalesData> createSalesData() {
+        return Arrays.asList(
+            // 강남구 매출 데이터
+            createSalesData("202501", 11680, "강남구", "CS100001", "한식전문점", 
+                BigInteger.valueOf(1500000000), 1200, BigInteger.valueOf(900000000), BigInteger.valueOf(600000000),
+                BigInteger.valueOf(750000000), BigInteger.valueOf(750000000), 600, 600, 375, 375),
+            createSalesData("202501", 11680, "강남구", "CS100002", "중식전문점", 
+                BigInteger.valueOf(1200000000), 800, BigInteger.valueOf(720000000), BigInteger.valueOf(480000000),
+                BigInteger.valueOf(600000000), BigInteger.valueOf(600000000), 400, 400, 300, 300),
+            createSalesData("202501", 11680, "강남구", "CS100003", "카페", 
+                BigInteger.valueOf(800000000), 1500, BigInteger.valueOf(480000000), BigInteger.valueOf(320000000),
+                BigInteger.valueOf(400000000), BigInteger.valueOf(400000000), 750, 750, 200, 200),
+            createSalesData("202501", 11680, "강남구", "CS100004", "편의점", 
+                BigInteger.valueOf(600000000), 2000, BigInteger.valueOf(360000000), BigInteger.valueOf(240000000),
+                BigInteger.valueOf(300000000), BigInteger.valueOf(300000000), 1000, 1000, 150, 150),
+            createSalesData("202501", 11680, "강남구", "CS100005", "미용실", 
+                BigInteger.valueOf(400000000), 600, BigInteger.valueOf(240000000), BigInteger.valueOf(160000000),
+                BigInteger.valueOf(200000000), BigInteger.valueOf(200000000), 300, 300, 100, 100),
+            
+            // 강서구 매출 데이터
+            createSalesData("202501", 11500, "강서구", "CS100001", "한식전문점", 
+                BigInteger.valueOf(1200000000), 1000, BigInteger.valueOf(720000000), BigInteger.valueOf(480000000),
+                BigInteger.valueOf(600000000), BigInteger.valueOf(600000000), 500, 500, 300, 300),
+            createSalesData("202501", 11500, "강서구", "CS100002", "중식전문점", 
+                BigInteger.valueOf(900000000), 600, BigInteger.valueOf(540000000), BigInteger.valueOf(360000000),
+                BigInteger.valueOf(450000000), BigInteger.valueOf(450000000), 300, 300, 225, 225),
+            createSalesData("202501", 11500, "강서구", "CS100003", "카페", 
+                BigInteger.valueOf(600000000), 1200, BigInteger.valueOf(360000000), BigInteger.valueOf(240000000),
+                BigInteger.valueOf(300000000), BigInteger.valueOf(300000000), 600, 600, 150, 150),
+            createSalesData("202501", 11500, "강서구", "CS100004", "편의점", 
+                BigInteger.valueOf(500000000), 1800, BigInteger.valueOf(300000000), BigInteger.valueOf(200000000),
+                BigInteger.valueOf(250000000), BigInteger.valueOf(250000000), 900, 900, 125, 125),
+            createSalesData("202501", 11500, "강서구", "CS100005", "미용실", 
+                BigInteger.valueOf(300000000), 500, BigInteger.valueOf(180000000), BigInteger.valueOf(120000000),
+                BigInteger.valueOf(150000000), BigInteger.valueOf(150000000), 250, 250, 75, 75),
+            
+            // 마포구 매출 데이터
+            createSalesData("202501", 11440, "마포구", "CS100001", "한식전문점", 
+                BigInteger.valueOf(1000000000), 800, BigInteger.valueOf(600000000), BigInteger.valueOf(400000000),
+                BigInteger.valueOf(500000000), BigInteger.valueOf(500000000), 400, 400, 250, 250),
+            createSalesData("202501", 11440, "마포구", "CS100002", "중식전문점", 
+                BigInteger.valueOf(800000000), 500, BigInteger.valueOf(480000000), BigInteger.valueOf(320000000),
+                BigInteger.valueOf(400000000), BigInteger.valueOf(400000000), 250, 250, 200, 200),
+            createSalesData("202501", 11440, "마포구", "CS100003", "카페", 
+                BigInteger.valueOf(700000000), 1000, BigInteger.valueOf(420000000), BigInteger.valueOf(280000000),
+                BigInteger.valueOf(350000000), BigInteger.valueOf(350000000), 500, 500, 175, 175),
+            createSalesData("202501", 11440, "마포구", "CS100004", "편의점", 
+                BigInteger.valueOf(400000000), 1200, BigInteger.valueOf(240000000), BigInteger.valueOf(160000000),
+                BigInteger.valueOf(200000000), BigInteger.valueOf(200000000), 600, 600, 100, 100),
+            createSalesData("202501", 11440, "마포구", "CS100005", "미용실", 
+                BigInteger.valueOf(250000000), 400, BigInteger.valueOf(150000000), BigInteger.valueOf(100000000),
+                BigInteger.valueOf(125000000), BigInteger.valueOf(125000000), 200, 200, 62, 62),
+            
+            // 서초구 매출 데이터
+            createSalesData("202501", 11650, "서초구", "CS100001", "한식전문점", 
+                BigInteger.valueOf(1300000000), 1100, BigInteger.valueOf(780000000), BigInteger.valueOf(520000000),
+                BigInteger.valueOf(650000000), BigInteger.valueOf(650000000), 550, 550, 325, 325),
+            createSalesData("202501", 11650, "서초구", "CS100002", "중식전문점", 
+                BigInteger.valueOf(1100000000), 700, BigInteger.valueOf(660000000), BigInteger.valueOf(440000000),
+                BigInteger.valueOf(550000000), BigInteger.valueOf(550000000), 350, 350, 275, 275),
+            createSalesData("202501", 11650, "서초구", "CS100003", "카페", 
+                BigInteger.valueOf(900000000), 1300, BigInteger.valueOf(540000000), BigInteger.valueOf(360000000),
+                BigInteger.valueOf(450000000), BigInteger.valueOf(450000000), 650, 650, 225, 225),
+            createSalesData("202501", 11650, "서초구", "CS100004", "편의점", 
+                BigInteger.valueOf(700000000), 1600, BigInteger.valueOf(420000000), BigInteger.valueOf(280000000),
+                BigInteger.valueOf(350000000), BigInteger.valueOf(350000000), 800, 800, 175, 175),
+            createSalesData("202501", 11650, "서초구", "CS100005", "미용실", 
+                BigInteger.valueOf(500000000), 700, BigInteger.valueOf(300000000), BigInteger.valueOf(200000000),
+                BigInteger.valueOf(250000000), BigInteger.valueOf(250000000), 350, 350, 125, 125),
+            
+            // 영등포구 매출 데이터
+            createSalesData("202501", 11560, "영등포구", "CS100001", "한식전문점", 
+                BigInteger.valueOf(1100000000), 900, BigInteger.valueOf(660000000), BigInteger.valueOf(440000000),
+                BigInteger.valueOf(550000000), BigInteger.valueOf(550000000), 450, 450, 275, 275),
+            createSalesData("202501", 11560, "영등포구", "CS100002", "중식전문점", 
+                BigInteger.valueOf(900000000), 600, BigInteger.valueOf(540000000), BigInteger.valueOf(360000000),
+                BigInteger.valueOf(450000000), BigInteger.valueOf(450000000), 300, 300, 225, 225),
+            createSalesData("202501", 11560, "영등포구", "CS100003", "카페", 
+                BigInteger.valueOf(600000000), 1000, BigInteger.valueOf(360000000), BigInteger.valueOf(240000000),
+                BigInteger.valueOf(300000000), BigInteger.valueOf(300000000), 500, 500, 150, 150),
+            createSalesData("202501", 11560, "영등포구", "CS100004", "편의점", 
+                BigInteger.valueOf(500000000), 1400, BigInteger.valueOf(300000000), BigInteger.valueOf(200000000),
+                BigInteger.valueOf(250000000), BigInteger.valueOf(250000000), 700, 700, 125, 125),
+            createSalesData("202501", 11560, "영등포구", "CS100005", "미용실", 
+                BigInteger.valueOf(300000000), 500, BigInteger.valueOf(180000000), BigInteger.valueOf(120000000),
+                BigInteger.valueOf(150000000), BigInteger.valueOf(150000000), 250, 250, 75, 75)
+        );
+    }
+    
+    /**
+     * 매출 데이터 생성 헬퍼 메서드
+     */
+    private SalesData createSalesData(
+            String baseYearMonth,
+            Integer districtCode,
+            String districtName,
+            String serviceCategoryCode,
+            String serviceCategoryName,
+            BigInteger monthlySalesAmount,
+            Integer monthlySalesCount,
+            BigInteger weekdaySalesAmount,
+            BigInteger weekendSalesAmount,
+            BigInteger maleSalesAmount,
+            BigInteger femaleSalesAmount,
+            Integer weekdaySalesCount,
+            Integer weekendSalesCount,
+            Integer maleSalesCount,
+            Integer femaleSalesCount) {
+        
+        return SalesData.builder()
+                .baseYearMonth(baseYearMonth)
+                .districtCode(districtCode)
+                .districtName(districtName)
+                .serviceCategoryCode(serviceCategoryCode)
+                .serviceCategoryName(serviceCategoryName)
+                .monthlySalesAmount(monthlySalesAmount)
+                .monthlySalesCount(monthlySalesCount)
+                .weekdaySalesAmount(weekdaySalesAmount)
+                .weekendSalesAmount(weekendSalesAmount)
+                .maleSalesAmount(maleSalesAmount)
+                .femaleSalesAmount(femaleSalesAmount)
+                .weekdaySalesCount(weekdaySalesCount)
+                .weekendSalesCount(weekendSalesCount)
+                .maleSalesCount(maleSalesCount)
+                .femaleSalesCount(femaleSalesCount)
                 .build();
     }
 }
