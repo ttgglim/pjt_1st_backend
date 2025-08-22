@@ -223,9 +223,3 @@ GET /api/districts/health
 ```bash
 docker run -p 8080:8080 seoul-commercial-district-api:1.0.0
 ```
-
-## 📞 문의
-
-- **개발팀**: KT 개발팀
-- **버전**: 1.0.0
-- **최종 업데이트**: 2025-08-21
